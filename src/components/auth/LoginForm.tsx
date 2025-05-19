@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Google } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -97,7 +96,7 @@ const LoginForm: React.FC = () => {
         onClick={handleGoogleLogin}
         disabled={loading}
       >
-        <Google className="mr-2 h-4 w-4" />
+        <Mail className="mr-2 h-4 w-4" />
         Sign in with Google
       </Button>
     </form>
