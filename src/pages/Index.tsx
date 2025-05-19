@@ -1,7 +1,5 @@
 
 import React, { useState } from 'react';
-import { AuthProvider } from '@/context/AuthContext';
-import { RecipeProvider } from '@/context/RecipeContext';
 import Header from '@/components/layout/Header';
 import Hero from '@/components/layout/Hero';
 import Footer from '@/components/layout/Footer';
@@ -11,8 +9,7 @@ import AddRecipeForm from '@/components/recipes/AddRecipeForm';
 import { useAuth } from '@/context/AuthContext';
 import { useRecipes } from '@/context/RecipeContext';
 
-// Component to wrap the actual content after providers are set up
-const RecipeContent: React.FC = () => {
+const Index: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { setVegetarianFilter } = useRecipes();
   const [currentFilter, setCurrentFilter] = useState<boolean | null>(null);
@@ -45,17 +42,6 @@ const RecipeContent: React.FC = () => {
       
       <Footer />
     </div>
-  );
-};
-
-// Main Index component that sets up providers
-const Index: React.FC = () => {
-  return (
-    <AuthProvider>
-      <RecipeProvider>
-        <RecipeContent />
-      </RecipeProvider>
-    </AuthProvider>
   );
 };
 
