@@ -1,73 +1,86 @@
-# Welcome to your Lovable project
 
-## Project info
+# Tasty Dish PDF Palace - Recipe App
 
-**URL**: https://lovable.dev/projects/d6e88270-4647-408e-9360-31c5745db743
+A modern recipe application that allows users to create, browse, and download recipes as PDFs. Built with React, TypeScript, and Firebase authentication.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Create and browse recipes
+- Download recipes as PDFs
+- Filter recipes by vegetarian/non-vegetarian
+- User authentication with email/password and Google sign-in
+- Responsive design for all device sizes
 
-**Use Lovable**
+## Setup and Installation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d6e88270-4647-408e-9360-31c5745db743) and start prompting.
+Follow these steps to set up and run the project:
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v14 or later)
+- npm or yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation Steps
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository
+   ```
+   git clone <repository-url>
+   cd tasty-dish-pdf-palace
+   ```
 
-Follow these steps:
+2. Install dependencies
+   ```
+   npm install
+   ```
+   
+   If you encounter any SWC binding errors, you can try:
+   ```
+   npm install --legacy-peer-deps
+   ```
+   
+   Or:
+   ```
+   npm install --force
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Start the development server
+   ```
+   npm run dev
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. Open your browser and navigate to:
+   ```
+   http://localhost:8080
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Firebase Authentication
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+This app uses Firebase for authentication. The configuration is already set up in the codebase.
 
-**Edit a file directly in GitHub**
+## Using the App
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Browse Recipes**: View all recipes on the home page
+- **Filter Recipes**: Use the filter options to show vegetarian or non-vegetarian recipes
+- **Add Recipes**: Click the "Add Recipe" button (requires login)
+- **Download Recipes**: Click the "Download" button on any recipe card to save as PDF
+- **Delete Recipes**: Recipe owners can delete their own recipes using the delete button
 
-**Use GitHub Codespaces**
+## Troubleshooting
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+If you encounter the SWC binding error:
 
-## What technologies are used for this project?
+1. The project has been configured to use esbuild instead of SWC in the vite.config.ts file
+2. Try using a different Node.js version if problems persist
+3. Clear node_modules and reinstall with `npm clean-install`
 
-This project is built with:
+## Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- `src/components`: React components
+- `src/context`: Context providers for authentication and recipes
+- `src/pages`: Page components
+- `src/types`: TypeScript type definitions
+- `src/utils`: Utility functions including PDF generation
 
-## How can I deploy this project?
+## License
 
-Simply open [Lovable](https://lovable.dev/projects/d6e88270-4647-408e-9360-31c5745db743) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT

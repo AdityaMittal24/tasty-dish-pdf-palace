@@ -1,11 +1,8 @@
 
 import React from 'react';
 import RecipeCard from './RecipeCard';
-import { Recipe } from '@/types/recipe';
 import { useRecipes } from '@/context/RecipeContext';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import { PlusCircle } from 'lucide-react';
 import AddRecipeForm from './AddRecipeForm';
 
 const RecipeGrid: React.FC = () => {
@@ -30,7 +27,11 @@ const RecipeGrid: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {filteredRecipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} onDelete={deleteRecipe} />
+        <RecipeCard 
+          key={recipe.id} 
+          recipe={recipe} 
+          onDelete={deleteRecipe} 
+        />
       ))}
     </div>
   );

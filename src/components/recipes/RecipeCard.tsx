@@ -7,6 +7,17 @@ import { Recipe } from '@/types/recipe';
 import { Clock, Users, Download, Trash2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { generatePDF } from '@/utils/pdfGenerator';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -69,15 +80,33 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onDelete }) => {
         </Button>
         
         {isOwner && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="text-xs flex gap-1 hover:bg-destructive hover:text-destructive-foreground"
-            onClick={() => onDelete(recipe.id)}
-          >
-            <Trash2 size={14} />
-            <span>Delete</span>
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs flex gap-1 hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <Trash2 size={14} />
+                <span>Delete</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete your
+                  recipe "{recipe.title}".
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => onDelete(recipe.id)} className="bg-destructive text-destructive-foreground">
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         )}
       </CardFooter>
     </Card>
