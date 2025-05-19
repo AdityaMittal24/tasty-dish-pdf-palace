@@ -10,6 +10,7 @@ A modern recipe application that allows users to create, browse, and download re
 - Filter recipes by vegetarian/non-vegetarian
 - User authentication with email/password and Google sign-in
 - Responsive design for all device sizes
+- Delete your own recipes
 
 ## Setup and Installation
 
@@ -33,7 +34,7 @@ Follow these steps to set up and run the project:
    npm install
    ```
    
-   If you encounter any SWC binding errors, you can try:
+   If you encounter any dependency errors, try:
    ```
    npm install --legacy-peer-deps
    ```
@@ -67,11 +68,22 @@ This app uses Firebase for authentication. The configuration is already set up i
 
 ## Troubleshooting
 
-If you encounter the SWC binding error:
+If you encounter build errors:
 
-1. The project has been configured to use esbuild instead of SWC in the vite.config.ts file
-2. Try using a different Node.js version if problems persist
-3. Clear node_modules and reinstall with `npm clean-install`
+1. Make sure all dependencies are installed correctly:
+   ```
+   npm install @vitejs/plugin-react --save-dev
+   ```
+
+2. If you're getting SWC binding errors:
+   - The project has been configured to use standard React plugin instead of SWC
+   - Try using a different Node.js version if problems persist
+   - Clear node_modules and reinstall with `npm clean-install`
+
+3. For other errors:
+   - Check console logs for specific error messages
+   - Make sure your Firebase configuration is correct
+   - Verify that all required environment variables are set
 
 ## Project Structure
 
