@@ -9,6 +9,7 @@ import { RecipeProvider } from "@/context/RecipeContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RecipeDetail from "./pages/RecipeDetail";
+import AdminPage from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/recipe/:id" element={<RecipeDetail />} />
+              <Route path="/admin" element={<AdminPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

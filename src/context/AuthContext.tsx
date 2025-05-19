@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 interface AuthContextType {
   currentUser: User | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
@@ -24,17 +25,24 @@ export const useAuth = () => {
   return context;
 };
 
+// Admin credentials
+const ADMIN_EMAIL = "admin@tastybytes.com";
+const ADMIN_PASSWORD = "admin123"; // In a real app, this would never be hardcoded
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is stored in localStorage
     const storedUser = localStorage.getItem('recipeUser');
     if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
+      const user = JSON.parse(storedUser);
+      setCurrentUser(user);
       setIsAuthenticated(true);
+      setIsAdmin(user.email === ADMIN_EMAIL);
     }
     
     // Set up Firebase auth state listener
@@ -48,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('recipeUser', JSON.stringify(user));
         setCurrentUser(user);
         setIsAuthenticated(true);
+        setIsAdmin(user.email === ADMIN_EMAIL);
       }
     });
 
@@ -66,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('recipeUser', JSON.stringify(user));
       setCurrentUser(user);
       setIsAuthenticated(true);
+      setIsAdmin(user.email === ADMIN_EMAIL);
       
       toast({
         title: "Login Successful",
@@ -93,6 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('recipeUser', JSON.stringify(user));
       setCurrentUser(user);
       setIsAuthenticated(true);
+      setIsAdmin(user.email === ADMIN_EMAIL);
       
       toast({
         title: "Google Login Successful",
@@ -120,6 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('recipeUser', JSON.stringify(user));
       setCurrentUser(user);
       setIsAuthenticated(true);
+      setIsAdmin(email === ADMIN_EMAIL);
       
       toast({
         title: "Registration Successful",
@@ -140,6 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem('recipeUser');
       setCurrentUser(null);
       setIsAuthenticated(false);
+      setIsAdmin(false);
       
       toast({
         title: "Logged Out",
@@ -149,7 +162,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, login, loginWithGoogle, register, logout }}>
+    <AuthContext.Provider value={{ 
+      currentUser, 
+      isAuthenticated, 
+      isAdmin,
+      login, 
+      loginWithGoogle, 
+      register, 
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );
