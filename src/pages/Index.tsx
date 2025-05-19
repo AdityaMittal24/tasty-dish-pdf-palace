@@ -1,13 +1,61 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import React, { useState } from 'react';
+import { AuthProvider } from '@/context/AuthContext';
+import { RecipeProvider } from '@/context/RecipeContext';
+import Header from '@/components/layout/Header';
+import Hero from '@/components/layout/Hero';
+import Footer from '@/components/layout/Footer';
+import RecipeGrid from '@/components/recipes/RecipeGrid';
+import RecipeFilters from '@/components/recipes/RecipeFilters';
+import AddRecipeForm from '@/components/recipes/AddRecipeForm';
+import { useAuth } from '@/context/AuthContext';
+import { useRecipes } from '@/context/RecipeContext';
+
+// Component to wrap the actual content after providers are set up
+const RecipeContent: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const { setVegetarianFilter } = useRecipes();
+  const [currentFilter, setCurrentFilter] = useState<boolean | null>(null);
+  
+  const handleFilterChange = (value: boolean | null) => {
+    setCurrentFilter(value);
+    setVegetarianFilter(value);
+  };
+  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <Hero />
+      
+      <main className="flex-grow container-custom py-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
+          <h2 className="text-2xl font-heading font-bold mb-4 md:mb-0">
+            Our Recipes
+          </h2>
+          
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <RecipeFilters onFilterChange={handleFilterChange} currentFilter={currentFilter} />
+            
+            {isAuthenticated && <AddRecipeForm />}
+          </div>
+        </div>
+        
+        <RecipeGrid />
+      </main>
+      
+      <Footer />
     </div>
+  );
+};
+
+// Main Index component that sets up providers
+const Index: React.FC = () => {
+  return (
+    <AuthProvider>
+      <RecipeProvider>
+        <RecipeContent />
+      </RecipeProvider>
+    </AuthProvider>
   );
 };
 
