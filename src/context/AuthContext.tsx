@@ -1,11 +1,15 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User as FirebaseUser, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../config/firebaseConfig';
 import { User } from '../types/recipe';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   currentUser: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -23,6 +27,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is stored in localStorage
@@ -31,43 +36,120 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
+    
+    // Set up Firebase auth state listener
+    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        const user: User = {
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName || 'User',
+          email: firebaseUser.email || ''
+        };
+        localStorage.setItem('recipeUser', JSON.stringify(user));
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Mock login - in a real app, this would be an API call
-    // For demo purposes, we'll just create a mock user
-    const mockUser: User = {
-      id: '1',
-      name: 'Demo User',
-      email: email
-    };
-    
-    localStorage.setItem('recipeUser', JSON.stringify(mockUser));
-    setCurrentUser(mockUser);
-    setIsAuthenticated(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user: User = {
+        id: userCredential.user.uid,
+        name: userCredential.user.displayName || 'User',
+        email: userCredential.user.email || ''
+      };
+      
+      localStorage.setItem('recipeUser', JSON.stringify(user));
+      setCurrentUser(user);
+      setIsAuthenticated(true);
+      
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to TastyBytes!",
+      });
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: "Incorrect email or password",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user: User = {
+        id: result.user.uid,
+        name: result.user.displayName || 'Google User',
+        email: result.user.email || ''
+      };
+      
+      localStorage.setItem('recipeUser', JSON.stringify(user));
+      setCurrentUser(user);
+      setIsAuthenticated(true);
+      
+      toast({
+        title: "Google Login Successful",
+        description: "Welcome to TastyBytes!",
+      });
+    } catch (error) {
+      toast({
+        title: "Google Login Failed",
+        description: "Could not sign in with Google",
+        variant: "destructive",
+      });
+      throw error;
+    }
   };
 
   const register = async (name: string, email: string, password: string) => {
-    // Mock register - in a real app, this would be an API call
-    const mockUser: User = {
-      id: Date.now().toString(),
-      name: name,
-      email: email
-    };
-    
-    localStorage.setItem('recipeUser', JSON.stringify(mockUser));
-    setCurrentUser(mockUser);
-    setIsAuthenticated(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user: User = {
+        id: userCredential.user.uid,
+        name: name,
+        email: email
+      };
+      
+      localStorage.setItem('recipeUser', JSON.stringify(user));
+      setCurrentUser(user);
+      setIsAuthenticated(true);
+      
+      toast({
+        title: "Registration Successful",
+        description: "Welcome to TastyBytes!",
+      });
+    } catch (error) {
+      toast({
+        title: "Registration Failed",
+        description: "Could not create account",
+        variant: "destructive",
+      });
+      throw error;
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('recipeUser');
-    setCurrentUser(null);
-    setIsAuthenticated(false);
+    signOut(auth).then(() => {
+      localStorage.removeItem('recipeUser');
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+      
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+      });
+    });
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, login, loginWithGoogle, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

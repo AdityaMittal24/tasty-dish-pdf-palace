@@ -1,6 +1,7 @@
 
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Recipe } from '../types/recipe';
 
 // This is a workaround for TypeScript as jsPDF-autotable adds autoTable to jsPDF's prototype
 declare module 'jspdf' {
@@ -84,5 +85,3 @@ export const generatePDF = (recipe: Recipe) => {
   // Save the PDF
   doc.save(`${recipe.title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
 };
-
-import { Recipe } from '../types/recipe';
